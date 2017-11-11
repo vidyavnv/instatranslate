@@ -68,5 +68,19 @@ def upload_file():
     return "Upload Fail"
 
 
+@app.route('/getVideos', methods=['GET'])
+def get_videos():
+    generator = block_blob_service.list_blobs(CONTAINER)
+    result = [blob.name for blob in generator]
+    return result
+    
+
+@app.route('/gettranslationreq', methods=['GET'])
+def get_translation_req():
+    generator = block_blob_service.list_blobs(CONTAINER)
+    result = [blob.name for blob in generator]
+    return result
+
+
 if __name__ == '__main__':
     app.run(debug=True)
