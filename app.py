@@ -74,6 +74,7 @@ def upload_file():
             blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
             result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, 
                 {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
+            upload_to_indexer(request.form['name']+'.mp4')
             return redirect(url_for('index'))
     return "Upload Fail"
 
