@@ -1,5 +1,8 @@
 import os
+import json
+
 from flask import Flask, request, redirect, url_for
+from flask.ext.cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from azure.storage.file import ContentSettings
 
@@ -13,6 +16,9 @@ ALLOWED_EXTENSIONS = set(['mp4'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+cors = CORS(app, resources={r"/": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 app.config.from_pyfile('constants.py')
 container = app.config['CONTAINER'] # Container name
@@ -24,7 +30,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['POST','OPTIONS'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def index():
     return '''
     <!doctype html>
@@ -72,7 +79,7 @@ def upload_file():
 def get_videos():
     generator = block_blob_service.list_blobs(CONTAINER)
     result = [blob.name for blob in generator]
-    return result
+    return json.dumps({'videos': result})
     
 
 @app.route('/gettranslationreq', methods=['GET'])
