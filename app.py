@@ -15,7 +15,7 @@ ALLOWED_EXTENSIONS = set(['mp4'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-cors = CORS(app, resources={r"/": {"origins": "*"}})
+cors = CORS(app, resources={r"/uploadFile": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
@@ -29,8 +29,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/', methods=['POST','OPTIONS'])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@app.route('/', methods=['GET'])
 def index():
     return '''
     <!doctype html>
@@ -44,7 +43,9 @@ def index():
     </form>
     '''
 
-@app.route('/uploadFile', methods=['POST'])
+
+@app.route('/uploadFile', methods=['POST','OPTIONS'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -67,16 +68,17 @@ def upload_file():
             filename = secure_filename(file.filename)
             block_blob_service.create_blob_from_stream(container, filename, file)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            result = VIDEOS_COLLECTION.insert_one({'video_name': filename, 'video_url': filename, 'video_desc': request.form['desc']})
+            result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc']}, 
+                {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc']}, upsert=True)
             return redirect(url_for('index'))
     return "Upload Fail"
 
 
 @app.route('/getVideos', methods=['GET'])
 def get_videos():
-    generator = block_blob_service.list_blobs(CONTAINER)
-    result = [blob.name for blob in generator]
-    return json.dumps({'videos': result})
+    videos_cursor = VIDEOS_COLLECTION.find({})
+    videos = [video for video in videos_cursor]
+    return json.dumps(videos)
     
 
 @app.route('/gettranslationreq', methods=['GET'])
