@@ -6,6 +6,7 @@ from azure.storage.file import ContentSettings
 from config import block_blob_service, VIDEOS_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
 
+from upload import upload_to_indexer
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/resources/videos/uploadedVideos/'
 ALLOWED_EXTENSIONS = set(['mp4'])
@@ -61,6 +62,8 @@ def upload_file():
             block_blob_service.create_blob_from_stream(container, filename, file)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             result = VIDEOS_COLLECTION.insert_one({'video_name': filename, 'video_url': filename, 'video_desc': request.form['desc']})
+            # Upload to insights now
+            upload_to_indexer(filename)
             return redirect(url_for('index'))
     return "Upload Fail"
 
