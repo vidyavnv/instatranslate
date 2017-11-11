@@ -9,6 +9,7 @@ from azure.storage.file import ContentSettings
 from config import block_blob_service, VIDEOS_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
 
+from upload import upload_to_indexer
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/resources/videos/uploadedVideos/'
 ALLOWED_EXTENSIONS = set(['mp4'])
