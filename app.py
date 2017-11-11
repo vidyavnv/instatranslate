@@ -5,6 +5,7 @@ from flask import Flask, request, redirect, url_for
 from flask.ext.cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from azure.storage.file import ContentSettings
+from bson import json_util
 
 from config import block_blob_service, VIDEOS_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
@@ -79,7 +80,7 @@ def upload_file():
 def get_videos():
     videos_cursor = VIDEOS_COLLECTION.find({})
     videos = [video for video in videos_cursor]
-    return json.dumps(videos)
+    return json_util.dumps(videos)
     
 
 @app.route('/gettranslationreq', methods=['GET'])
