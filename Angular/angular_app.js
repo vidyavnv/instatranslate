@@ -3,5 +3,6 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
 
       $scope.greeting = "Angular Scope Connected";
       SweetAlert.swal("Success!", "User details have been Stored! ", "success");
+      console.log("Hello");
 
 }]);
