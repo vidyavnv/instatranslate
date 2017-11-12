@@ -57,7 +57,7 @@
 	                <td>{{ video._id }}</td>
 	                <td>{{ video.video_name }}</td>
 	                <td>{{ video.video_desc }}</td>
-	                <td>{{ video.video_url }}</td>
+	                <td>{{ video.video_url.replace(" ","")}}</td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video);">Select</button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="toggle();">Convert</button></td>
 	        </tr>

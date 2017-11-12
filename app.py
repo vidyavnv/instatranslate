@@ -14,7 +14,7 @@ from upload import upload_to_indexer
 from threading import Thread
 
 from translate import get_transcript, tts, merge 
-from utils import upload_to_bucket, email_to_user
+#from utils import upload_to_bucket, email_to_user
 
 from video_insights import get_video_insights
 
@@ -68,9 +68,8 @@ def upload_file():
             block_blob_service.create_blob_from_stream(container, filename, file)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
-
-            result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']},
-                {'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
+            result = VIDEOS_COLLECTION.update({'video_name': file.filename, 'video_url': blob_url+file.filename, 'video_desc': "test video", 'video_lang': "English"},
+                {'video_name': file.filename, 'video_url': blob_url+file.filename, 'video_desc': "test video", 'video_lang': "English"}, upsert=True)
             upload_to_indexer(filename)
             return "Sucess"
     return "Upload Fail"
