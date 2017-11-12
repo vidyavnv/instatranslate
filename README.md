@@ -1,4 +1,3 @@
-* Here’s the elevator pitch
 There is abundance of knowledge on the web in the form of videos and a large majority of the population can not make the most of it because of language barriers. We aim to reduce that by providing an instant way to translate videos to any language of your choice which will be available instantaneously. It is really dificult to find the right videos because of badly titled content and lack of detailed description. We use latest advancements in AI and ML to extract the main entities in the video and index them so that there is an efficient way to store them and thus allow users to access most relevant contents efficiently. 
 
 ## Inspiration
@@ -43,3 +42,7 @@ Use Case 2: User selects video to be translated -> Text file for the video is tr
 - Translate videos of longer length. 
 - Better sync with translated audio and video
 - Add emotions to the translated speech
+
+## How to run this code
+pip install -r requirements.txt
+python app.py
