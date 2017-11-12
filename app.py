@@ -11,6 +11,7 @@ from config import block_blob_service, VIDEOS_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
 
 from upload import upload_to_indexer
+from video_insights import get_video_insights
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/resources/videos/uploadedVideos/'
 ALLOWED_EXTENSIONS = set(['mp4'])
@@ -72,7 +73,7 @@ def upload_file():
             block_blob_service.create_blob_from_stream(container, filename, file)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
-            result = VIDEOS_COLLECTION.update({'video_name': request.form['video_name']+'.mp4', 'video_url': blob_url+request.form['video_file']+'.mp4', 'video_desc': request.form['video_desc'], 'video_lang': request.form['video_lang']},
+            result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']},
                 {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
             upload_to_indexer(filename)
             return redirect(url_for('index'))
@@ -87,14 +88,51 @@ def get_videos():
     return json_util.dumps(videos)
 
 
-
-@app.route('/gettranslationreq', methods=['POST'])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@app.route('/gettranslationreq', methods=['GET'])
 def get_translation_req():
     generator = block_blob_service.list_blobs(CONTAINER)
     result = [blob.name for blob in generator]
     return result
 
+@app.route('/addVideoDetailsToDB', methods=['POST'])
+def add_details():
+    print(request)
+
+    video_id_insight = request.args.get("id")
+
+    insight_data = get_video_insights(video_id_insight)
+    insight_data = json.loads(insight_data.decode('utf-8'))
+    summary = insight_data["summarizedInsights"]
+    # print(insight_data["breakdowns"][0])
+    # print(summary)
+    # print("here")
+    result = VIDEOS_COLLECTION.update({'video_name': insight_data["breakdowns"][0]["externalId"]},
+            { "$set":
+                {
+                    "faces": summary["faces"]
+                    }
+                })
+    # print("here2")
+    result = VIDEOS_COLLECTION.update({'video_name': insight_data["breakdowns"][0]["externalId"]},
+            { "$set":
+                {
+                    "insight_id": video_id_insight,
+                    "events": summary["annotations"]
+                    }
+                })
+    # print("here3")
+
+    result = VIDEOS_COLLECTION.update({'video_name': insight_data["breakdowns"][0]["externalId"]},
+            { "$set":
+                {
+                    "topics": summary["topics"]
+                    }
+                })
+
+    # print("here4")
+
+
+    return "success"
 
 if __name__ == '__main__':
     app.run(debug=True)

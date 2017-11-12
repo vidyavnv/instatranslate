@@ -15,10 +15,9 @@ def get_video_insights(video_id):
         conn.request("GET", "/Breakdowns/Api/Partner/Breakdowns/"+ video_id +"?" + str(params), "{body}", headers)
         response = conn.getresponse()
         data = response.read()
-        print(data)
         conn.close()
+        return data
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 
-get_video_insights('fde36fc40e')
