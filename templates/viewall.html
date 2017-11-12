@@ -26,7 +26,7 @@
 		  <div id = "search">
 	   <form class="form-inline">
         <div class="form-group">
-            <label >Search</label>
+            <label>Search</label>
             <input type="text" ng-model="search" class="form-control" placeholder="Search">
         </div>
     </form>
@@ -62,8 +62,8 @@
 	                <td>{{ video.video_name }}</td>
 	                <td>{{ video.video_desc }}</td>
 	                <td>{{ video.video_url.replace(" ","")}}</td>
-	                <td><button type="button" class="btn btn-default btn-sm" ng-click="playvideo(video.);">Play</button></td>
-	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video.video_url.replace(' ',''));">Select</button></td>
+	                <td><button type="button" class="btn btn-default btn-sm" ng-click="playvideo(video.video_url);">Play</button></td>
+	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video);">Select</button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="toggle();">Convert</button></td>
 	        </tr>
 	      </table>
@@ -76,6 +76,8 @@
   </div>
 </div>
 </div>
+
+
 
 <div ng-show="!show">
 	<div class="container" style="text-align: center;">
@@ -103,7 +105,7 @@
 						</div>
 						<div class="form-group">
 							<label>Video Id</label>
-							<input type="text" placeholder="Enter VideoID Here.." class="form-control" ng-model="selectedVideo.video_id" >
+							<input type="text" placeholder="Enter VideoID Here.." class="form-control" ng-model="selectedVideo.insight_id" >
 						</div>
 						<div style="text-align: center;">
 							<button ng-disabled="userForm.$invalid" type="button" class="btn btn-lg btn-info" ng-click="translatevideo(selectedVideo);">Convert</button>
@@ -116,10 +118,11 @@
 </div>
 
 
-<div class="container" ng-show="videoPlayer">
-	<div align="center" class="embed-responsive embed-responsive-16by9">
+<div class="container" ng-show="videoPlayer" >
+	<div align="center" class="embed-responsive embed-responsive-16by9" ng-init="check()">
+		Hello
 		<video autoplay loop class="embed-responsive-item" controls>
-		  <source src={{current_playing}} type="video/mp4">
+		  <source ng-src="{{trustSrc(current_playing)}}" type="video/mp4">
 		</video>
 	</div>
 </div>	

@@ -2,6 +2,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+import json
+
 from config import block_blob_service, CONVERTED_VIDEOS_COLLECTION, CONTAINER
 
 
@@ -14,44 +16,17 @@ def upload_to_bucket(output_file, output_lang):
 
 
 def email_to_user(video_id, email_id, output_lang, url):
-	sender = "vidya.vnv@gmail.com"
-	recipient = email_id
-
-	# Create message container - the correct MIME type is multipart/alternative.
-	msg = MIMEMultipart('alternative')
-	msg['Subject'] = "Link To Video"
-	msg['From'] = sender
-	msg['To'] = recipient
-
-	# Create the body of the message (a plain-text and an HTML version).
-	text = "Hi!\nHow are you?\nHere is the link you wanted:\n {} in {} language".format(url, output_lang)
-	html = """\
-	<html>
-	  <head></head>
-	  <body>
-	    <p>Hi!<br>
-	       How are you?<br>
-	       Here is the <a href={}>link</a> you wanted.
-	    </p>
-	  </body>
-	</html>
-	"""
-	html = html.format(url)
-
-	# Record the MIME types of both parts - text/plain and text/html.
-	part1 = MIMEText(text, 'plain')
-	part2 = MIMEText(html, 'html')
-
-	# Attach parts into message container.
-	# According to RFC 2046, the last part of a multipart message, in this case
-	# the HTML message, is best and preferred.
-	msg.attach(part1)
-	msg.attach(part2)
-
-	# Send the message via local SMTP server.
-	s = smtplib.SMTP('localhost:5000')
-	print(s)
-	# sendmail function takes 3 arguments: sender's address, recipient's address
-	# and message to send - here it is sent as one string.
-	s.sendmail(sender, recipient, msg.as_string())
-	s.quit()
+	import http.client
+	conn = http.client.HTTPSConnection("api.sendgrid.com")
+	text = "<html><p>{}</p></html>".format(url)
+	payload = {"personalizations":[{"to":[{"email":email_id,"name":"John Doe"}],"subject":"Your video is ready!"}],"from":{"email":"anuraag.advani@gmail.com","name":"Sam Smith"},"reply_to":{"email":"anuraag.advani@gmail.com","name":"Sam Smith"},"subject":"Your Video is ready!","content":[{"type":"text/html","value":text}]}
+	payload = json.dumps(payload)
+	print(payload)
+	headers = {
+	 'authorization': "Bearer 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",
+	 'content-type': "application/json"
+	 }
+	conn.request("POST", "/v3/mail/send", payload, headers)
+	res = conn.getresponse()
+	data = res.read()
+	print(data.decode("utf-8"))

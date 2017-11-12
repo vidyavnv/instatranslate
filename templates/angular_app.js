@@ -9,7 +9,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
     //SweetAlert.swal("Success!", "User details have been Stored! ", "success");
     console.log("Hello");
     var APIUrl="http://localhost:5000";
-    $scope.current_playing=""
+    $scope.current_playing="https://instatranslatefile.blob.core.windows.net/resources/ThinkDifferent_Video.mp4";
 
 
 	$scope.languages=["en-US","fr-FR","de-DE"];
@@ -40,6 +40,8 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
     $scope.playvideo = function(video_name) {
             $scope.$parent.current_playing = video_name;
             $scope.$parent.videoPlayer=true;
+            console.log( $scope.current_playing);
+            $scope.current_playing="https://instatranslatefile.blob.core.windows.net/resources/ThinkDifferent_Video.mp4";
       };
 
 
@@ -84,6 +86,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
     //Function for send request for translating videos: POST
     $scope.translatevideo=function(selectedVideo){
           console.log($scope.selectedVideo);
+          $scope.selectedVideo.video_id=$scope.selectedVideo.insight_id;
           var res = $http.post(APIUrl+'/gettranslationreq',JSON.stringify($scope.selectedVideo));
           res.success(function(data, status, headers, config) {
             $scope.message = data;
@@ -92,6 +95,11 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
             alert( "failure message: " + JSON.stringify({data: data}));
           });
           SweetAlert.swal("Success!", "Translation Request Submitted, video will be available soon! ", "success");
+    }
+
+
+    $scope.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
     }
 
 
@@ -105,8 +113,8 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
       	console.log($scope.selectedVideo);
     };
 
-   	$scope.checkScope = function() {
-      	console.log($scope.selectedVideo)
+   	$scope.check = function() {
+      	console.log("Hello"+$scope.current_playing);
     };
 
 	$scope.toggle = function() {
