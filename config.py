@@ -11,3 +11,4 @@ block_blob_service.create_container(CONTAINER)
 mongo_client = MongoClient(MONGO_URI)
 db = mongo_client['instatranslatordb']
 VIDEOS_COLLECTION = db['videos']
+REQUEST_COLLECTION = db['requests']

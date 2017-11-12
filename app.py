@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from azure.storage.file import ContentSettings
 from bson import json_util
 
-from config import block_blob_service, VIDEOS_COLLECTION
+from config import block_blob_service, VIDEOS_COLLECTION, REQUEST_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
 
 from upload import upload_to_indexer
@@ -86,11 +86,27 @@ def get_videos():
     return json_util.dumps(videos)
     
 
-@app.route('/gettranslationreq', methods=['GET'])
+@app.route('/gettranslationreq', methods=['POST'])
 def get_translation_req():
-    generator = block_blob_service.list_blobs(CONTAINER)
-    result = [blob.name for blob in generator]
-    return result
+    if request.method == 'POST':
+        video_id = request.form['video_id']
+        email_id = request.form['email']
+        lang = request.form['lang']
+        is_success = False
+        check_query = REQUEST_COLLECTION.find_one(
+            {'video_id': video_id, 'email_id': email_id, 'language': lang})
+        if not check_query:
+            REQUEST_COLLECTION.insert_one(
+                {'video_id': video_id, 'email_id': email_id, 'language': lang, 'is_success': is_success}, 
+            )
+        return 'SUCCESS'
+
+
+
+
+
+
+    
 
 
 if __name__ == '__main__':
