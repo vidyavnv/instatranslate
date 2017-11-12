@@ -41,6 +41,7 @@ def index():
       <p><input type=file name=file>
          Name: <input type=text name=name>
          Description: <input type=text name=desc>
+         Language: <input type=text name=lang>
          <input type=submit value=Upload>
     </form>
     '''
@@ -70,8 +71,10 @@ def upload_file():
             filename = secure_filename(file.filename)
             block_blob_service.create_blob_from_stream(container, filename, file)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc']}, 
-                {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc']}, upsert=True)
+            blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
+            result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, 
+                {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
+            upload_to_indexer(request.form['name']+'.mp4')
             return redirect(url_for('index'))
     return "Upload Fail"
 
