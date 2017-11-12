@@ -47,18 +47,23 @@
 		      	<span class="glyphicon sort-icon" ng-show="sortKey=='lname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 		      </th>
 		      <th>
+		      	Play
+		      </th>
+		      <th>
 		      	Select
 		      </th>
 		      <th>
 		      	Convert Speech Language
 		      </th>
+
 	      </thead>
 	        <tr flex="100" dir-paginate="video in videos | orderBy:sortKey:reverse | filter:search | itemsPerPage:5">
 	                <td>{{ video._id }}</td>
 	                <td>{{ video.video_name }}</td>
 	                <td>{{ video.video_desc }}</td>
 	                <td>{{ video.video_url.replace(" ","")}}</td>
-	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video);">Select</button></td>
+	                <td><button type="button" class="btn btn-default btn-sm" ng-click="playvideo(video.);">Play</button></td>
+	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video.video_url.replace(' ',''));">Select</button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="toggle();">Convert</button></td>
 	        </tr>
 	      </table>
@@ -107,6 +112,15 @@
 			</form>
 	</div>
 	</div>
+	</div>
+</div>
+
+
+<div class="container" ng-show="videoPlayer">
+	<div align="center" class="embed-responsive embed-responsive-16by9">
+		<video autoplay loop class="embed-responsive-item" controls>
+		  <source src={{current_playing}} type="video/mp4">
+		</video>
 	</div>
 </div>	
 

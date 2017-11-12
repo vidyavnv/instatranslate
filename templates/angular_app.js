@@ -5,9 +5,11 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
     $scope.greeting = "Angular Scope Connected";
     $scope.show=true;
     $scope.selectedVideo="hello";
+    $scope.videoPlayer=false;
     //SweetAlert.swal("Success!", "User details have been Stored! ", "success");
     console.log("Hello");
     var APIUrl="http://localhost:5000";
+    $scope.current_playing=""
 
 
 	$scope.languages=["English","French","German"];
@@ -55,6 +57,14 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
             $scope.file = new FormData();
             $scope.file.append("file", files[0]);
         };
+
+    $scope.playvideo = function(video_name) {
+            $scope.$parent.current_playing = video_name;
+            $scope.$parent.videoPlayer=true;
+      };
+
+
+
 
     $scope.submitGuideDetailsForm= function() {
      console.log($scope.file);
