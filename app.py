@@ -80,6 +80,7 @@ def upload_file():
 
 
 @app.route('/getVideos', methods=['GET'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def get_videos():
     videos_cursor = VIDEOS_COLLECTION.find({})
     videos = [video for video in videos_cursor]
