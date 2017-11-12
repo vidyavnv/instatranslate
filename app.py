@@ -14,7 +14,7 @@ from upload import upload_to_indexer
 from threading import Thread
 
 from translate import get_transcript, tts, merge 
-#from utils import upload_to_bucket, email_to_user
+from utils import upload_to_bucket, email_to_user
 
 from video_insights import get_video_insights
 
@@ -85,7 +85,10 @@ def get_videos():
 
 def run_translation(video_id, email_id, output_lang):
     video = VIDEOS_COLLECTION.find({"insight_id": video_id}, {"video_lang": 1, "_id": 0})
-    input_lang = [v.video_lang for v in video][0]
+    print("loikhiyo")
+    input_lang = [v for v in video]
+    input_lang = input_lang[0]['video_lang']
+    print(input_lang)
     get_transcript.download_transcript(video_id, input_lang)
     tts.tts(video_id, input_lang, output_lang)
     output_file = merge.merge(video_id, output_lang)
@@ -97,10 +100,12 @@ def run_translation(video_id, email_id, output_lang):
 @app.route('/gettranslationreq', methods=['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def get_translation_req():
+    video_data=json.loads(request.data.decode('utf-8'))
     if request.method == 'POST':
-        video_id = request.form['video_id']
-        email_id = request.form['email']
-        lang = request.form['lang']
+        print(request.data)
+        video_id = video_data['video_id']
+        email_id = video_data['email']
+        lang = video_data['lang']
         is_success = False
         Thread(target = run_translation(video_id, email_id, lang)).start()
         # check_query = REQUEST_COLLECTION.find_one(

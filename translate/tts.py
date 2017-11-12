@@ -55,7 +55,14 @@ def tts(video_id,input_lang,output_lang):
     voice = ElementTree.SubElement(body, 'voice')
     voice.set('{http://www.w3.org/XML/1998/namespace}lang', lang_to_translate_to)
     voice.set('{http://www.w3.org/XML/1998/namespace}gender', 'Female')
-    voice.set('name', 'Microsoft Server Speech Text to Speech Voice ('+lang_to_translate_from+', ZiraRUS)')
+    if(lang_to_translate_to=="en-US"):
+        voice.set('name', 'Microsoft Server Speech Text to Speech Voice ('+lang_to_translate_to+', ZiraRUS)')
+    elif(lang_to_translate_to=="fr-FR"):
+        voice.set('name', 'Microsoft Server Speech Text to Speech Voice ('+lang_to_translate_to+', HortenseRUS)')
+    else:
+        voice.set('name', 'Microsoft Server Speech Text to Speech Voice ('+lang_to_translate_to+', HeddaRUS)')
+
+
     input_text = open(tts_file_name,'r')
     txt = input_text.read()
     voice.text = txt

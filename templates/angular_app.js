@@ -4,7 +4,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
 
     $scope.greeting = "Angular Scope Connected";
     $scope.show=true;
-    $scope.selectedVideo="hello";
+    $scope.selectedVideo="";
     $scope.videoPlayer=false;
     //SweetAlert.swal("Success!", "User details have been Stored! ", "success");
     console.log("Hello");
@@ -12,32 +12,11 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
     $scope.current_playing=""
 
 
-	$scope.languages=["English","French","German"];
+	$scope.languages=["en-US","fr-FR","de-DE"];
 	
 	//Code to upload Video and send Details to user: POST
   	$scope.upload_video = function() {
       	console.log($scope.video);
-  		//var res = $http.post(APIUrl+'/uploadFile',$scope.video);
-		//	res.success(function(data, status, headers, config) {
-		//		$scope.message = data;
-		//	});
-		//	res.error(function(data, status, headers, config) {
-		//		alert( "failure message: " + JSON.stringify({data: data}));
-		//	  });
-
-		//$http({
-        //        url: APIUrl+'/uploadFile', 
-        //       method: 'POST',
-        //        data: $scope.video,
-        //       file:
-        //        headers: {'Content-Type': 'application/json'}
-        // }).then(function(response) {
-        //        var res = response.data;
-        //        console.log(res);
-        //  }, function errorCallback(response) {
-        // });
-
-
         var fd = new FormData();
         fd.append('file', $scope.video.video_file);
         $http.post(APIUrl+'/uploadFile', fd, {
@@ -64,8 +43,6 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
       };
 
 
-
-
     $scope.submitGuideDetailsForm= function() {
      console.log($scope.file);
      var mydata=$scope.video;
@@ -83,8 +60,6 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
               console.log(error);
            });
        };
-
-
 
 
   	//Code to get all videos in DB: GET

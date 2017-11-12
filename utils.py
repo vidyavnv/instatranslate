@@ -2,15 +2,14 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from config import block_blob_service
-from constants import CONVERTED_VIDEOS_COLLECTION, CONTAINER
+from config import block_blob_service, CONVERTED_VIDEOS_COLLECTION, CONTAINER
 
 
 def upload_to_bucket(output_file, output_lang):
-	file = open(filename, 'r')
+	file = open(output_file, 'rb')
 	block_blob_service.create_blob_from_stream(CONTAINER, output_file, file)
 	blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
-    result = CONVERTED_VIDEOS_COLLECTION.insert({'video_name': output_file, 'video_url': blob_url+output_file, 'video_lang': output_lang})
+	result = CONVERTED_VIDEOS_COLLECTION.insert({'video_name': output_file, 'video_url': blob_url+output_file, 'video_lang': output_lang})
 	return blob_url+output_file
 
 
@@ -50,7 +49,8 @@ def email_to_user(video_id, email_id, output_lang, url):
 	msg.attach(part2)
 
 	# Send the message via local SMTP server.
-	s = smtplib.SMTP('localhost')
+	s = smtplib.SMTP('localhost:5000')
+	print(s)
 	# sendmail function takes 3 arguments: sender's address, recipient's address
 	# and message to send - here it is sent as one string.
 	s.sendmail(sender, recipient, msg.as_string())
