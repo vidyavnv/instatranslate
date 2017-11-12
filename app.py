@@ -90,7 +90,7 @@ def run_translation(video_id, email_id, output_lang):
     get_transcript.download_transcript(video_id, input_lang)
     tts.tts(video_id, input_lang, output_lang)
     output_file = merge.merge(video_id, output_lang)
-    link_to_video = upload_to_bucket(output_file)
+    link_to_video = upload_to_bucket(output_file, output_lang)
     email_to_user(video_id, email_id, output_lang, link_to_video)
 
 
