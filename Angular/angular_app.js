@@ -12,7 +12,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
 
 	$scope.languages=["English","French","German"];
 	
-	//Code to upload Video
+	//Code to upload Video and send Details to user: POST
   	$scope.upload_video = function() {
       	console.log($scope.video);
   		var res = $http.post(APIUrl+'/uploadFile',$scope.video);
@@ -25,6 +25,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
      	SweetAlert.swal("Success!", "Video has been uploaded! ", "success");
   	}
 
+  	//Code to get all videos in DB: GET
     $scope.get_all_videos=function(){
         $http({
               method: 'GET',
@@ -43,7 +44,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
         });
     }
 
-    //Function for send request for translating videos
+    //Function for send request for translating videos: POST
     $scope.translatevideo=function(selectedVideo){
           console.log($scope.selectedVideo);
           var res = $http.post(APIUrl+'/gettranslationreq',JSON.stringify($scope.selectedVideo));

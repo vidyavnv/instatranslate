@@ -90,9 +90,6 @@ def get_videos():
     return json_util.dumps(videos)
 
 
-def run_translation():
-
-
 @app.route('/gettranslationreq', methods=['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def get_translation_req():
