@@ -11,13 +11,33 @@
 <link rel="stylesheet" href="sweetalert.css">
 <script src="Sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
+<link href="default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
 <body>
 <div ng-app="MyApp" ng-controller="MainController" ng-init="get_all_videos();">
-
+	<div id="header-wrapper">
+		<div id="header" class="container">
+			<div id="logo">
+				<h1><a href="#">Insta Translate</a></h1>
+			</div>
+			<div id="banner"> <a href="#" class="image"><img src="images/pic01.jpg" alt="" /></a> </div>
+		</div>
+	</div>
+	<div id="menu-wrapper">
+		<div id="menu" class="container">
+			<ul>
+				<li><a href="#">Homepage</a></li>
+				<li><a href="#">Login</a></li>
+				<li><a href="#">Upload</a></li>
+				<li class="current_page_item"><a href="#">All Videos</a></li>
+				<li><a href="#">Translate Video</a></li>
+			</ul>
+		</div>
+		<!-- end #menu --> 
+	</div>
+<br>
 <div ng-show="show">
 <div class="container" style="text-align: center;">
-    	<h1>All Videos</h1>
   </div>
 
   <div class="container">
@@ -34,16 +54,13 @@
 		  <div ng-controller="MainController" class="md-padding demo checkboxdemoSelectAll" ng-app="MyApp">  
 	      <table class="table table-hover" id = "table">
 	       <thead>
-	         <th ng-click="sort('cid')">Video ID
-				<span class="glyphicon sort-icon" ng-show="sortKey=='cid'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
-				</th>
 	          <th ng-click="sort('fname')">Video Name
 				<span class="glyphicon sort-icon" ng-show="sortKey=='fname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 				</th>
 	          <th ng-click="sort('lname')">Original Language
 				<span class="glyphicon sort-icon" ng-show="sortKey=='lname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 				</th>
-		      <th ng-click="sort('lname')"> ThumbNail
+		      <th ng-click="sort('lname')"> Link
 		      	<span class="glyphicon sort-icon" ng-show="sortKey=='lname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 		      </th>
 		      <th>
@@ -58,11 +75,10 @@
 
 	      </thead>
 	        <tr flex="100" dir-paginate="video in videos | orderBy:sortKey:reverse | filter:search | itemsPerPage:5">
-	                <td>{{ video._id }}</td>
 	                <td>{{ video.video_name }}</td>
-	                <td>{{ video.video_desc }}</td>
+	                <td>{{ video.video_lang }}</td>
 	                <td>{{ video.video_url.replace(" ","")}}</td>
-	                <td><button type="button" class="btn btn-default btn-sm" ng-click="playvideo(video.video_url);">Play</button></td>
+	                <td><button type="button" class="btn btn-default btn-sm" ng-click="playvideo(video.video_url);"><span class="glyphicon glyphicon-play"></button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video);">Select</button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="toggle();">Convert</button></td>
 	        </tr>
@@ -81,7 +97,6 @@
 
 <div ng-show="!show">
 	<div class="container" style="text-align: center;">
-    	<h1>HackPrinceton 2017 </h1>
     </div>
     <div class="container" ng-init="checkScope();">
     <h1 class="well">Convert Video Language</h1>
@@ -121,13 +136,15 @@
 <div class="container" ng-show="videoPlayer" >
 	<div align="center" class="embed-responsive embed-responsive-16by9" ng-init="check()">
 		Hello
-		<video autoplay loop class="embed-responsive-item" controls>
-		  <source ng-src="{{trustSrc(current_playing)}}" type="video/mp4">
+		<video id="video_element" class="embed-responsive-item" src="" controls>
 		</video>
 	</div>
 </div>	
 
 
 </div>	
+<div id="copyright" class="container">
+	<p>&copy; Untitled. All rights reserved. | Developed by Anuraag, Jamshed and Vidya</a>.</p>
+</div>
 </body>
 </html>

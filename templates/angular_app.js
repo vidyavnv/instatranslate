@@ -1,5 +1,5 @@
 angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSweetAlert'])
-   .controller('MainController', ['$scope','$http','SweetAlert','$location',function($scope,$http,SweetAlert,$location) { 
+   .controller('MainController', ['$scope','$http','SweetAlert','$location','$sce',function($scope,$http,SweetAlert,$location,$sce) { 
 
 
     $scope.greeting = "Angular Scope Connected";
@@ -9,7 +9,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
     //SweetAlert.swal("Success!", "User details have been Stored! ", "success");
     console.log("Hello");
     var APIUrl="http://localhost:5000";
-    $scope.current_playing="https://instatranslatefile.blob.core.windows.net/resources/ThinkDifferent_Video.mp4";
+    //$scope.current_playing="https://instatranslatefile.blob.core.windows.net/resources/ThinkDifferent_Video.mp4";
 
 
 	$scope.languages=["en-US","fr-FR","de-DE"];
@@ -41,7 +41,11 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
             $scope.$parent.current_playing = video_name;
             $scope.$parent.videoPlayer=true;
             console.log( $scope.current_playing);
-            $scope.current_playing="https://instatranslatefile.blob.core.windows.net/resources/ThinkDifferent_Video.mp4";
+            $scope.current_playing= video_name;
+            var parent_element= document.getElementById("video_element");
+            parent_element.src=video_name;
+            parent_element.load();
+            parent_element.play();
       };
 
 
@@ -61,6 +65,7 @@ angular.module('MyApp', ['angularUtils.directives.dirPagination','oitozero.ngSwe
               console.log('error load file!!!!!')
               console.log(error);
            });
+           SweetAlert.swal("Request Submitted!", "Video will be available shortly! ", "success");
        };
 
 

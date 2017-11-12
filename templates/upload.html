@@ -11,12 +11,35 @@
 <link rel="stylesheet" href="sweetalert.css">
 <script src="Sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<link href="default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
 
 <body>
 <div ng-app="MyApp" ng-controller="MainController">
 
+	<div id="header-wrapper">
+	<div id="header" class="container">
+		<div id="logo">
+			<h1><a href="#">Insta Translate</a></h1>
+		</div>
+		<div id="banner"> <a href="#" class="image"><img src="images/pic01.jpg" alt="" /></a> </div>
+	</div>
+	</div>
+	<div id="menu-wrapper">
+		<div id="menu" class="container">
+			<ul>
+				<li><a href="#">Homepage</a></li>
+				<li><a href="#">Login</a></li>
+				<li class="current_page_item"><a href="#">Upload</a></li>
+				<li><a href="#">All Videos</a></li>
+				<li><a href="#">Translate Video</a></li>
+			</ul>
+		</div>
+		<!-- end #menu --> 
+	</div>
+
+	<br>
 	<div class="container" style="text-align: center;">
-    	<h1>HackPrinceton 2017</h1>
     </div>
     <div class="container">
     <h1 class="well">Upload Video</h1>
@@ -52,6 +75,9 @@
 	</div>
 
 </div>
+</div>
+<div id="copyright" class="container">
+	<p>&copy; Untitled. All rights reserved. | Developed by Anuraag, Jamshed and Vidya</a>.</p>
 </div>
 </body>
 </html>
