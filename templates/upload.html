@@ -22,7 +22,7 @@
     <h1 class="well">Upload Video</h1>
 	<div class="col-lg-12 well">
 	<div class="row">
-			<form  name="videoForm">
+			<form name="videoForm" enctype="multipart/form-data" ng-submit="submitGuideDetailsForm()" >
 				<div class="col-sm-12">
 						<div class="row">
 							<div class="col-sm-6 form-group">
@@ -40,12 +40,10 @@
 						</div>
 						<div class="form-group">
 							<label>Video</label>
-							<form method="post" enctype="multipart/form-data">
-					      		<input type="file" name="file" ng-model="video.video_file" class="form-control">
-    						</form>
+    						<input type='file' class="form-control" name='file' onchange="angular.element(this).scope().uploadFile(this.files)">
 						</div>		
 						<div style="text-align: center;">
-							<button ng-disabled="userForm.$invalid" type="button" class="btn btn-lg btn-info" ng-click="upload_video()">Upload</button>
+							<button ng-disabled="userForm.$invalid" type="button" class="btn btn-lg btn-info" ng-click="submitGuideDetailsForm()">Upload</button>
 						</div>
 				</div>
 			</form>

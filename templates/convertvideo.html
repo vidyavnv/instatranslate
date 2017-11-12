@@ -16,43 +16,41 @@
 <div ng-app="MyApp" ng-controller="MainController">
 
 	<div class="container" style="text-align: center;">
-    	<h1>HackPrinceton 2017</h1>
+    	<h1>HackPrinceton 2017 </h1>
     </div>
-    <div class="container">
-    <h1 class="well">Upload Video</h1>
+    <div class="container" ng-init="checkScope();">
+    <h1 class="well">Convert Video Language</h1>
 	<div class="col-lg-12 well">
 	<div class="row">
-			<form  name="videoForm">
+			<form  name="convertVideo">
 				<div class="col-sm-12">
 						<div class="row">
 							<div class="col-sm-6 form-group">
 								<label>Video Name</label>
-								<input type="text" placeholder="Enter Video Name Here.." class="form-control" ng-model="video.video_name" required>
+								<input type="text" placeholder="Enter Video Name Here.." class="form-control" ng-model="selectedVideo.video_name" required>
 							</div>
 							<div class="col-sm-6 form-group">
 								  <label>Video Language</label>
-								  <select ng-model="video.video_lang" class="form-control" ng-options="x for x in languages"></select>
+								  <select ng-model="selectedVideo.language" class="form-control" ng-options="x for x in languages"></select>
 							</div>
 						</div>
 						<div class="form-group">
-							<label>Description</label>
-							<input type="text" placeholder="Enter Video Description Here.." class="form-control" ng-model="video.video_desc" required>
+							<label>EmailId</label>
+							<input type="text" placeholder="Enter EmailId Here.." class="form-control" ng-model="selectedVideo.email" required>
 						</div>
 						<div class="form-group">
-							<label>Video</label>
-							<form method="post" enctype="multipart/form-data">
-					      		<input type="file" name="file" ng-model="video.video_file" class="form-control">
-    						</form>
-						</div>		
+							<label>VideoId</label>
+							<input type="text" placeholder="Enter VideoID Here.." class="form-control" ng-model="selectedVideo.video_desc" required>
+						</div>
 						<div style="text-align: center;">
-							<button ng-disabled="userForm.$invalid" type="button" class="btn btn-lg btn-info" ng-click="upload_video()">Upload</button>
+							<button ng-disabled="userForm.$invalid" type="button" class="btn btn-lg btn-info" ng-click="upload_video()">Convert</button>
 						</div>
 				</div>
 			</form>
 	</div>
 	</div>
 	</div>
-
+	
 </div>
 </div>
 </body>

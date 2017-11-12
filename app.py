@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from azure.storage.file import ContentSettings
 from bson import json_util
 
-from config import block_blob_service, VIDEOS_COLLECTION, REQUEST_COLLECTION
+from config import block_blob_service, VIDEOS_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
 
 from upload import upload_to_indexer
@@ -16,6 +16,7 @@ from threading import Thread
 from translate import get_transcript, tts, merge 
 from utils import upload_to_bucket, email_to_user
 
+from video_insights import get_video_insights
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/resources/videos/uploadedVideos/'
 ALLOWED_EXTENSIONS = set(['mp4'])
@@ -37,7 +38,6 @@ def allowed_file(filename):
 
 
 @app.route('/', methods=['GET'])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def index():
     return render_template('index.html')
     # return '''
@@ -124,6 +124,46 @@ def get_translation_req():
 
         return 'SUCCESS'
 
+
+@app.route('/addVideoDetailsToDB', methods=['POST'])
+def add_details():
+    print(request)
+
+    video_id_insight = request.args.get("id")
+
+    insight_data = get_video_insights(video_id_insight)
+    insight_data = json.loads(insight_data.decode('utf-8'))
+    summary = insight_data["summarizedInsights"]
+    # print(insight_data["breakdowns"][0])
+    # print(summary)
+    # print("here")
+    result = VIDEOS_COLLECTION.update({'video_name': insight_data["breakdowns"][0]["externalId"]},
+            { "$set":
+                {
+                    "faces": summary["faces"]
+                    }
+                })
+    # print("here2")
+    result = VIDEOS_COLLECTION.update({'video_name': insight_data["breakdowns"][0]["externalId"]},
+            { "$set":
+                {
+                    "insight_id": video_id_insight,
+                    "events": summary["annotations"]
+                    }
+                })
+    # print("here3")
+
+    result = VIDEOS_COLLECTION.update({'video_name': insight_data["breakdowns"][0]["externalId"]},
+            { "$set":
+                {
+                    "topics": summary["topics"]
+                    }
+                })
+
+    # print("here4")
+
+
+    return "success"
 
 if __name__ == '__main__':
     app.run(debug=True)

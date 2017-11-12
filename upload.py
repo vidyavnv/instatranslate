@@ -18,7 +18,8 @@ def upload_to_indexer(vid_name):
         'privacy': 'Public',
         'videoUrl': url,
         'language': 'en-US',
-        # 'callbackUrl': '{string}',
+        'callbackUrl': 'https://1aa0e0d4.ngrok.io/addVideoDetailsToDB',
+        'externalId' : vid_name
         })
 
     try:
