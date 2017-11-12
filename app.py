@@ -1,7 +1,7 @@
 import os
 import json
 
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, render_template
 from flask.ext.cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from azure.storage.file import ContentSettings
@@ -17,7 +17,7 @@ ALLOWED_EXTENSIONS = set(['mp4'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-cors = CORS(app, resources={r"/uploadFile": {"origins": "*"}})
+#cors = CORS(app, resources={r"/uploadFile": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
@@ -33,18 +33,7 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET'])
 def index():
-    return '''
-    <!doctype html>
-    <title>Upload Video</title>
-    <h1>Upload Video</h1>
-    <form method=post enctype=multipart/form-data action=/uploadFile>
-      <p><input type=file name=file>
-         Name: <input type=text name=name>
-         Description: <input type=text name=desc>
-         Language: <input type=text name=lang>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template('index.html')
 
 
 @app.route('/uploadFile', methods=['POST','OPTIONS'])
@@ -53,29 +42,30 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            print('No file part')
             return redirect(request.url)
         file = request.files['file']
 
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            print('No selected file')
             return redirect(request.url)
 
         # generator = file_service.list_directories_and_files(ROOT_DIR)
         # for file_or_dir in generator:
         #     print(file_or_dir.name)
-
+        print(file.filename)
         if file and allowed_file(file.filename):
+            print("Inside IF")
             filename = secure_filename(file.filename)
             block_blob_service.create_blob_from_stream(container, filename, file)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
-            result = VIDEOS_COLLECTION.update({'video_name': request.form['video_name']+'.mp4', 'video_url': blob_url+request.form['video_file']+'.mp4', 'video_desc': request.form['video_desc'], 'video_lang': request.form['video_lang']},
-                {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
+            result = VIDEOS_COLLECTION.update({'video_name': file.filename, 'video_url': blob_url+file.filename, 'video_desc': "Test Video", 'video_lang': "English"},
+                {'video_name': file.filename, 'video_url': file.filename, 'video_desc': "Test Video", 'video_lang': "English"}, upsert=True)
             upload_to_indexer(filename)
-            return redirect(url_for('index'))
+            return "Sucess"
     return "Upload Fail"
 
 
