@@ -5,3 +5,4 @@ CONTAINER = 'resources'
 VIDEO_DIR = 'videos'
 
 MONGO_URI = 'mongodb://instatranslatedb:o5tEQCQyAAhB1RbnmUOGMUfPqKAnCt35bIhmGsAc5YC3Tgu9lNTkWuD06PMH2AW5Sgjg9b2gAymN7VpA6iNBcA==@instatranslatedb.documents.azure.com:10255/?ssl=true&replicaSet=globaldb'
+OCP = '821863b59d28469d93e6a001d72e89c3'

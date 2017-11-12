@@ -11,6 +11,8 @@ from config import block_blob_service, VIDEOS_COLLECTION, REQUEST_COLLECTION
 from constants import CONTAINER, VIDEO_DIR
 
 from upload import upload_to_indexer
+from threading import Thread
+
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/resources/videos/uploadedVideos/'
 ALLOWED_EXTENSIONS = set(['mp4'])
@@ -32,6 +34,7 @@ def allowed_file(filename):
 
 
 @app.route('/', methods=['GET'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def index():
     return '''
     <!doctype html>
@@ -87,19 +90,26 @@ def get_videos():
     return json_util.dumps(videos)
 
 
+def run_translation():
+
+
 @app.route('/gettranslationreq', methods=['POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def get_translation_req():
     if request.method == 'POST':
         video_id = request.form['video_id']
         email_id = request.form['email']
         lang = request.form['lang']
         is_success = False
-        check_query = REQUEST_COLLECTION.find_one(
-            {'video_id': video_id, 'email_id': email_id, 'language': lang})
-        if not check_query:
-            REQUEST_COLLECTION.insert_one(
-                {'video_id': video_id, 'email_id': email_id, 'language': lang, 'is_success': is_success}, 
-            )
+        Thread(target = run_translation(video_id, email_id, lang)).start()
+        # check_query = REQUEST_COLLECTION.find_one(
+        #     {'video_id': video_id, 'email_id': email_id, 'language': lang})
+        # if not check_query:
+        #     REQUEST_COLLECTION.insert_one(
+        #         {'video_id': video_id, 'email_id': email_id, 'language': lang, 'is_success': is_success}, 
+        #     )
+
+
         return 'SUCCESS'
 
 
