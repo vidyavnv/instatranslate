@@ -12,3 +12,4 @@ mongo_client = MongoClient(MONGO_URI)
 db = mongo_client['instatranslatordb']
 VIDEOS_COLLECTION = db['videos']
 REQUEST_COLLECTION = db['requests']
+CONVERTED_VIDEOS_COLLECTION = db['converted_videos']

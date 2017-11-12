@@ -1,7 +1,7 @@
 import os
 import json
 
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, render_template
 from flask.ext.cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from azure.storage.file import ContentSettings
@@ -12,6 +12,9 @@ from constants import CONTAINER, VIDEO_DIR
 
 from upload import upload_to_indexer
 from threading import Thread
+
+from translate import get_transcript, tts, merge 
+from utils import upload_to_bucket, email_to_user
 
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/resources/videos/uploadedVideos/'
@@ -36,18 +39,19 @@ def allowed_file(filename):
 @app.route('/', methods=['GET'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def index():
-    return '''
-    <!doctype html>
-    <title>Upload Video</title>
-    <h1>Upload Video</h1>
-    <form method=post enctype=multipart/form-data action=/uploadFile>
-      <p><input type=file name=file>
-         Name: <input type=text name=name>
-         Description: <input type=text name=desc>
-         Language: <input type=text name=lang>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template('index.html')
+    # return '''
+    # <!doctype html>
+    # <title>Upload Video</title>
+    # <h1>Upload Video</h1>
+    # <form method=post enctype=multipart/form-data action=/uploadFile>
+    #   <p><input type=file name=file>
+    #      Name: <input type=text name=name>
+    #      Description: <input type=text name=desc>
+    #      Language: <input type=text name=lang>
+    #      <input type=submit value=Upload>
+    # </form>
+    # '''
 
 
 @app.route('/uploadFile', methods=['POST','OPTIONS'])
@@ -76,7 +80,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             blob_url = 'https://instatranslatefile.blob.core.windows.net/resources/'
             result = VIDEOS_COLLECTION.update({'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']},
-                {'video_name': request.form['name']+'.mp4', 'video_url': request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
+                {'video_name': request.form['name']+'.mp4', 'video_url': blob_url+request.form['name']+'.mp4', 'video_desc': request.form['desc'], 'video_lang': request.form['lang']}, upsert=True)
             upload_to_indexer(filename)
             return redirect(url_for('index'))
     return "Upload Fail"
@@ -90,7 +94,15 @@ def get_videos():
     return json_util.dumps(videos)
 
 
-def run_translation():
+def run_translation(video_id, email_id, output_lang):
+    video = VIDEOS_COLLECTION.find({"insight_id": video_id}, {"video_lang": 1, "_id": 0})
+    input_lang = [v.video_lang for v in video][0]
+    get_transcript.download_transcript(video_id, input_lang)
+    tts.tts(video_id, input_lang, output_lang)
+    output_file = merge.merge(video_id, output_lang)
+    link_to_video = upload_to_bucket(output_file)
+    email_to_user(video_id, email_id, output_lang, link_to_video)
+
 
 
 @app.route('/gettranslationreq', methods=['POST'])
@@ -111,13 +123,6 @@ def get_translation_req():
 
 
         return 'SUCCESS'
-
-
-
-
-
-
-    
 
 
 if __name__ == '__main__':
