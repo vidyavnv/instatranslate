@@ -60,9 +60,6 @@
 	          <th ng-click="sort('lname')">Original Language
 				<span class="glyphicon sort-icon" ng-show="sortKey=='lname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 				</th>
-		      <th ng-click="sort('lname')"> Link
-		      	<span class="glyphicon sort-icon" ng-show="sortKey=='lname'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
-		      </th>
 		      <th>
 		      	Play
 		      </th>
@@ -77,7 +74,6 @@
 	        <tr flex="100" dir-paginate="video in videos | orderBy:sortKey:reverse | filter:search | itemsPerPage:5">
 	                <td>{{ video.video_name }}</td>
 	                <td>{{ video.video_lang }}</td>
-	                <td>{{ video.video_url.replace(" ","")}}</td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="playvideo(video.video_url);"><span class="glyphicon glyphicon-play"></button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="goToConvert(video);">Select</button></td>
 	                <td><button type="button" class="btn btn-default btn-sm" ng-click="toggle();">Convert</button></td>

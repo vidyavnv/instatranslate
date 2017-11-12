@@ -13,7 +13,7 @@ def download_transcript(video_id,input_lang):
         # Request parameters
         'language': input_lang,
         })
-
+    print(input_lang)
     try:
         conn = http.client.HTTPSConnection('videobreakdown.azure-api.net')
         conn.request("GET", "/Breakdowns/Api/Partner/Breakdowns/"+video_id+"/VttUrl?%s" % params, "{body}", headers)

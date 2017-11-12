@@ -85,11 +85,10 @@ def get_videos():
 
 def run_translation(video_id, email_id, output_lang):
     video = VIDEOS_COLLECTION.find({"insight_id": video_id}, {"video_lang": 1, "_id": 0})
-    print("loikhiyo")
     input_lang = [v for v in video]
     input_lang = input_lang[0]['video_lang']
     print(input_lang)
-    get_transcript.download_transcript(video_id, input_lang)
+    get_transcript.download_transcript(video_id, output_lang)
     tts.tts(video_id, input_lang, output_lang)
     output_file = merge.merge(video_id, output_lang)
     link_to_video = upload_to_bucket(output_file, output_lang)
