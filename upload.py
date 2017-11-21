@@ -18,7 +18,7 @@ def upload_to_indexer(vid_name):
         'privacy': 'Public',
         'videoUrl': url,
         'language': 'en-US',
-        'callbackUrl': 'https://1aa0e0d4.ngrok.io/addVideoDetailsToDB',
+        'callbackUrl': 'https://510c57fa.ngrok.io/addVideoDetailsToDB',
         'externalId' : vid_name
         })
 
