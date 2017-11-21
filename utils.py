@@ -23,7 +23,7 @@ def email_to_user(video_id, email_id, output_lang, url):
 	payload = json.dumps(payload)
 	print(payload)
 	headers = {
-	 'authorization': "Bearer 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",
+	 'authorization': "Bearer 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",
 	 'content-type': "application/json"
 	 }
 	conn.request("POST", "/v3/mail/send", payload, headers)
