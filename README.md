@@ -45,5 +45,4 @@ Use Case 2: User selects video to be translated -> Text file for the video is tr
 
 ## How to run this code
 pip install -r requirements.txt
-
 python app.py
