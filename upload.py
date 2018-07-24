@@ -1,3 +1,4 @@
+from constants import OCP_APIM_SUBSCRIPTION_KEY
 
 def upload_to_indexer(vid_name):
     import http.client, urllib.request, urllib.parse, urllib.error, base64
@@ -7,7 +8,7 @@ def upload_to_indexer(vid_name):
     headers = {
             # Request headers
             'Content-Type': 'multipart/form-data',
-            'Ocp-Apim-Subscription-Key': '821863b59d28469d93e6a001d72e89c3',
+            'Ocp-Apim-Subscription-Key': OCP_APIM_SUBSCRIPTION_KEY,
             }
 
     url  = url_pre+vid_name

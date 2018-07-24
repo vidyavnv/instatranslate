@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from constants import EMAIL_AUTH_TOKEN
 
 import json
 
@@ -23,7 +24,7 @@ def email_to_user(video_id, email_id, output_lang, url):
 	payload = json.dumps(payload)
 	print(payload)
 	headers = {
-	 'authorization': "Bearer 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",
+	 'authorization': EMAIL_AUTH_TOKEN,
 	 'content-type': "application/json"
 	 }
 	conn.request("POST", "/v3/mail/send", payload, headers)
